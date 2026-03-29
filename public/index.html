@@ -3,19 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JARVIS 3.0 - Powered Beyond Expectations</title>
+  <title>JARVIS 3.0 — Powered by SHADOW AI</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500&family=EB+Garamond:wght@400;600&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:'Inter',sans-serif;background:#000;overflow:hidden;height:100vh}
-
-    /* ANNOUNCEMENT BAR */
-    .topbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:#00ff88;color:#000;text-align:center;font-size:13px;font-weight:600;padding:8px;letter-spacing:1px}
-
-    /* NAV */
+    .topbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:#00ff88;color:#000;text-align:center;font-size:13px;font-weight:700;padding:8px;letter-spacing:1px}
     nav{position:fixed;top:36px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 40px}
     .nav-logo{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;color:#fff;letter-spacing:2px}
     .nav-logo span{color:#00ff88}
+    .nav-sub{font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:2px;margin-top:2px;font-family:'Inter',sans-serif}
     .nav-links{display:flex;gap:0;align-items:center;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:6px 8px}
     .nav-links a{color:rgba(255,255,255,0.6);text-decoration:none;font-size:13px;padding:6px 16px;border-radius:100px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:4px}
     .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.08)}
@@ -24,23 +21,16 @@
     .btn-login{color:rgba(255,255,255,0.7);font-size:14px;cursor:pointer;background:none;border:none;font-family:'Inter',sans-serif}
     .btn-start{background:#00ff88;color:#000;border:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px;transition:all 0.2s}
     .btn-start:hover{background:#00e87a;transform:translateY(-1px)}
-
-    /* LANDING */
     #landing{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
-
-    /* CANVAS BG */
     #bgCanvas{position:absolute;inset:0;width:100%;height:100%}
-
-    /* BRAIN 3D */
     #brainCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:2}
-
-    /* HERO CONTENT */
     .hero{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px;margin-top:60px}
-    h1{font-family:'Orbitron',monospace;font-size:clamp(32px,5vw,72px);font-weight:900;color:#fff;line-height:1.05;margin-bottom:16px;letter-spacing:-1px}
+    .badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);padding:6px 20px;border-radius:100px;color:rgba(0,255,136,0.8);font-size:12px;margin-bottom:24px;letter-spacing:2px;text-transform:uppercase}
+    h1{font-family:'Orbitron',monospace;font-size:clamp(32px,5vw,72px);font-weight:900;color:#fff;line-height:1.05;margin-bottom:8px;letter-spacing:-1px}
     h1 span{color:#00ff88;text-shadow:0 0 30px rgba(0,255,136,0.5)}
+    .powered-by{font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:32px;letter-spacing:3px;text-transform:uppercase}
+    .powered-by span{color:#00ff88;font-weight:600}
     .subtitle{font-size:15px;color:rgba(255,255,255,0.45);margin-bottom:40px;letter-spacing:1px;max-width:500px}
-
-    /* INPUT BOX */
     .input-container{width:100%;max-width:660px;background:rgba(0,0,0,0.6);border:1px solid rgba(0,255,136,0.2);border-radius:16px;padding:20px 20px 14px;backdrop-filter:blur(20px);transition:border 0.3s}
     .input-container:focus-within{border-color:rgba(0,255,136,0.5);box-shadow:0 0 30px rgba(0,255,136,0.08)}
     .input-container textarea{width:100%;background:transparent;border:none;outline:none;color:#fff;font-size:15px;font-family:'Inter',sans-serif;resize:none;min-height:56px;max-height:120px;line-height:1.6;caret-color:#00ff88}
@@ -52,30 +42,27 @@
     .send-btn{width:38px;height:38px;background:linear-gradient(135deg,#00ff88,#00cc66);border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
     .send-btn:hover{transform:scale(1.08);box-shadow:0 0 20px rgba(0,255,136,0.4)}
     .send-btn svg{width:16px;height:16px}
-
-    /* CHAT PAGE */
     #chat-page{display:none;position:fixed;inset:0;z-index:200;background:#0a0a0a}
     .chat-layout{display:flex;height:100vh}
-
-    /* SIDEBAR */
     .sidebar{width:240px;background:#0d0d0d;border-right:1px solid #1a1a1a;display:flex;flex-direction:column;padding:16px 12px;flex-shrink:0}
-    .sidebar-logo{font-family:'Orbitron',monospace;font-size:15px;font-weight:700;color:#fff;padding:8px 12px;margin-bottom:12px;letter-spacing:1px}
+    .sidebar-logo{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:#fff;padding:8px 12px;margin-bottom:2px;letter-spacing:1px}
     .sidebar-logo span{color:#00ff88}
+    .sidebar-powered{font-size:10px;color:#333;padding:0 12px;margin-bottom:12px;letter-spacing:1px}
+    .sidebar-powered span{color:#00ff88}
     .new-chat-btn{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;font-size:13px;font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;border:1px solid #222;background:#111;color:#fff;margin-bottom:16px;transition:all 0.2s}
     .new-chat-btn:hover{background:#1a1a1a;border-color:#00ff88}
-    .sidebar-section{font-size:10px;font-weight:600;color:#444;letter-spacing:1px;padding:0 12px;margin-bottom:6px;text-transform:uppercase}
+    .sidebar-section{font-size:10px;font-weight:600;color:#333;letter-spacing:1px;padding:0 12px;margin-bottom:6px;text-transform:uppercase}
     .chat-history-item{padding:9px 14px;border-radius:8px;font-size:13px;color:#555;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:all 0.15s}
     .chat-history-item:hover{background:#1a1a1a;color:#fff}
     .sidebar-bottom{margin-top:auto;border-top:1px solid #1a1a1a;padding-top:12px}
     .user-info{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer}
     .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#00ff88,#00cc66);color:#000;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
-    .user-name{font-size:13px;font-weight:500;color:#fff}
-    .user-email{font-size:11px;color:#444}
-
-    /* CHAT MAIN */
+    .user-name{font-size:13px;font-weight:500;color:#fff;font-family:'Orbitron',monospace;letter-spacing:1px}
+    .user-email{font-size:10px;color:#333;letter-spacing:1px}
     .chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-    .chat-topbar{display:flex;align-items:center;padding:14px 24px;border-bottom:1px solid #1a1a1a;background:#0a0a0a}
+    .chat-topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:1px solid #1a1a1a;background:#0a0a0a}
     .model-label{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:#00ff88;letter-spacing:1px}
+    .model-sub{font-size:11px;color:#333;letter-spacing:1px}
     .chat-area{flex:1;overflow-y:auto;padding:32px 0;background:#0a0a0a}
     .chat-area::-webkit-scrollbar{width:4px}
     .chat-area::-webkit-scrollbar-thumb{background:#222;border-radius:4px}
@@ -98,20 +85,22 @@
     .chat-send-btn{width:36px;height:36px;background:linear-gradient(135deg,#00ff88,#00cc66);border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
     .chat-send-btn:hover{transform:scale(1.05);box-shadow:0 0 15px rgba(0,255,136,0.4)}
     .chat-send-btn svg{width:16px;height:16px;fill:#000}
-    .input-hint{text-align:center;font-size:11px;color:#333;margin-top:8px;letter-spacing:1px}
+    .input-hint{text-align:center;font-size:11px;color:#222;margin-top:8px;letter-spacing:2px}
   </style>
 </head>
 <body>
 
-<!-- LANDING -->
 <div id="landing">
   <canvas id="bgCanvas"></canvas>
   <canvas id="brainCanvas"></canvas>
 
-  <div class="topbar">🚀 JARVIS 3.0 — Powered Beyond Expectations. Now Live!</div>
+  <div class="topbar">🚀 JARVIS 3.0 — Powered by SHADOW AI. Now Live!</div>
 
   <nav>
-    <div class="nav-logo">JARVIS <span>3.0</span></div>
+    <div>
+      <div class="nav-logo">JARVIS <span>3.0</span></div>
+      <div class="nav-sub">POWERED BY SHADOW AI</div>
+    </div>
     <div class="nav-links">
       <a><span>0.1 /</span> Home</a>
       <a><span>0.2 /</span> Features</a>
@@ -125,8 +114,10 @@
   </nav>
 
   <div class="hero">
+    <div class="badge">⚡ Introducing JARVIS 3.0</div>
     <h1>Powered Beyond<br><span>Expectations.</span></h1>
-    <p class="subtitle">Meet JARVIS 3.0 — The AI that thinks before you ask. Fast. Smart. Unstoppable.</p>
+    <div class="powered-by">by <span>SHADOW AI</span></div>
+    <p class="subtitle">The AI that thinks before you ask. Fast. Smart. Unstoppable.</p>
     <div class="input-container">
       <textarea id="landingInput" placeholder="Ask JARVIS 3.0 anything..." rows="2" onkeydown="handleLandingKey(event)"></textarea>
       <div class="input-bottom">
@@ -143,11 +134,11 @@
   </div>
 </div>
 
-<!-- CHAT PAGE -->
 <div id="chat-page">
   <div class="chat-layout">
     <div class="sidebar">
       <div class="sidebar-logo">JARVIS <span>3.0</span></div>
+      <div class="sidebar-powered">POWERED BY <span>SHADOW AI</span></div>
       <button class="new-chat-btn" onclick="newChat()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         New chat
@@ -159,7 +150,7 @@
           <div class="avatar">J</div>
           <div>
             <div class="user-name">JARVIS 3.0</div>
-            <div class="user-email">Powered Beyond Expectations</div>
+            <div class="user-email">BY SHADOW AI</div>
           </div>
         </div>
       </div>
@@ -167,7 +158,10 @@
 
     <div class="chat-main">
       <div class="chat-topbar">
-        <div class="model-label">⚡ JARVIS 3.0 ▾</div>
+        <div>
+          <div class="model-label">⚡ JARVIS 3.0 ▾</div>
+          <div class="model-sub">POWERED BY SHADOW AI</div>
+        </div>
       </div>
       <div class="chat-area" id="chatArea"></div>
       <div class="chat-input-wrapper">
@@ -177,7 +171,7 @@
             <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
           </button>
         </div>
-        <div class="input-hint">JARVIS 3.0 — POWERED BEYOND EXPECTATIONS</div>
+        <div class="input-hint">JARVIS 3.0 — POWERED BY SHADOW AI</div>
       </div>
     </div>
   </div>
@@ -185,7 +179,6 @@
 
 <script src="script.js"></script>
 <script>
-// PARTICLES BG
 const bg=document.getElementById('bgCanvas');
 const bgCtx=bg.getContext('2d');
 bg.width=window.innerWidth;bg.height=window.innerHeight;
@@ -203,12 +196,11 @@ function drawBg(){
       const d=Math.hypot(p.x-q.x,p.y-q.y);
       if(d<130){bgCtx.beginPath();bgCtx.moveTo(p.x,p.y);bgCtx.lineTo(q.x,q.y);
         bgCtx.strokeStyle=`rgba(0,255,136,${.05*(1-d/130)})`;bgCtx.lineWidth=.5;bgCtx.stroke()}
-    })
-  });requestAnimationFrame(drawBg)
+    });
+  });requestAnimationFrame(drawBg);
 }
 drawBg();
 
-// 3D ROTATING BRAIN (wireframe sphere with neural connections)
 const bc=document.getElementById('brainCanvas');
 const bCtx=bc.getContext('2d');
 bc.width=window.innerWidth;bc.height=window.innerHeight;
@@ -218,12 +210,7 @@ for(let i=0;i<120;i++){
   const theta=Math.random()*Math.PI*2;
   const phi=Math.acos(2*Math.random()-1);
   const r=180+Math.random()*40;
-  nodes.push({
-    ox:r*Math.sin(phi)*Math.cos(theta),
-    oy:r*Math.sin(phi)*Math.sin(theta),
-    oz:r*Math.cos(phi),
-    pulse:Math.random()*Math.PI*2
-  });
+  nodes.push({ox:r*Math.sin(phi)*Math.cos(theta),oy:r*Math.sin(phi)*Math.sin(theta),oz:r*Math.cos(phi),pulse:Math.random()*Math.PI*2});
 }
 function drawBrain(){
   bCtx.clearRect(0,0,bc.width,bc.height);
@@ -233,35 +220,28 @@ function drawBrain(){
   const projected=nodes.map(n=>{
     const x=n.ox*cos-n.oz*sin;
     const z=n.ox*sin+n.oz*cos;
-    const y=n.oy;
     const scale=600/(600+z);
-    return{sx:cx+x*scale,sy:cy+y*scale,z,scale,pulse:n.pulse};
+    return{sx:cx+x*scale,sy:cy+n.oy*scale,z,scale,pulse:n.pulse};
   });
-  // connections
   projected.forEach((p,i)=>{
     projected.forEach((q,j)=>{
       if(j<=i)return;
       const d=Math.hypot(p.sx-q.sx,p.sy-q.sy);
       if(d<80&&p.z>-100&&q.z>-100){
         bCtx.beginPath();bCtx.moveTo(p.sx,p.sy);bCtx.lineTo(q.sx,q.sy);
-        const alpha=0.15*(1-d/80)*(p.z+200)/400;
-        bCtx.strokeStyle=`rgba(0,255,136,${alpha})`;bCtx.lineWidth=0.5;bCtx.stroke();
+        bCtx.strokeStyle=`rgba(0,255,136,${0.12*(1-d/80)*(p.z+200)/400})`;bCtx.lineWidth=0.5;bCtx.stroke();
       }
     });
-    // nodes
     if(p.z>-50){
-      const r=2*p.scale;
-      bCtx.beginPath();bCtx.arc(p.sx,p.sy,r,0,Math.PI*2);
       const bright=(Math.sin(Date.now()*0.002+p.pulse)+1)/2;
-      bCtx.fillStyle=`rgba(0,255,${100+Math.floor(bright*155)},${0.4+bright*0.6})`;
-      bCtx.fill();
+      bCtx.beginPath();bCtx.arc(p.sx,p.sy,2*p.scale,0,Math.PI*2);
+      bCtx.fillStyle=`rgba(0,255,${100+Math.floor(bright*155)},${0.4+bright*0.6})`;bCtx.fill();
     }
   });
   requestAnimationFrame(drawBrain);
 }
 drawBrain();
 
-// UI FUNCTIONS
 function showChat(){
   document.getElementById('landing').style.display='none';
   document.getElementById('chat-page').style.display='block';
