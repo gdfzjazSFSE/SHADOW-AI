@@ -1,29 +1,16 @@
 async function sendMessage() {
-  var input = document.getElementById('userInput');
+  var input = document.getElementById('chatInput');
   var chatArea = document.getElementById('chatArea');
+  if (!input || !chatArea) return;
   var message = input.value.trim();
   if (!message) return;
 
-  var welcome = document.getElementById('welcome-msg');
-  if (welcome) welcome.remove();
-
-  chatArea.innerHTML += `
-    <div class="message-row user">
-      <div class="bubble user">${message}</div>
-    </div>`;
+  chatArea.innerHTML += '<div class="msg-row user"><div class="bubble user">' + message + '</div></div>';
   input.value = '';
   input.style.height = 'auto';
   chatArea.scrollTop = chatArea.scrollHeight;
 
-  chatArea.innerHTML += `
-    <div class="message-row bot" id="thinking-row">
-      <div class="thinking">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <span>ShadowAI is thinking...</span>
-      </div>
-    </div>`;
+  chatArea.innerHTML += '<div class="msg-row bot" id="thinking-row"><div class="thinking"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>';
   chatArea.scrollTop = chatArea.scrollHeight;
 
   try {
@@ -34,30 +21,24 @@ async function sendMessage() {
     });
     var data = await response.json();
 
-    var thinking = document.getElementById('thinking-row');
-    if (thinking) thinking.remove();
+    var t = document.getElementById('thinking-row');
+    if (t) t.remove();
 
-    chatArea.innerHTML += `
-      <div class="message-row bot">
-        <div class="bubble bot">${data.reply}</div>
-      </div>`;
+    chatArea.innerHTML += '<div class="msg-row bot"><div class="bubble bot">' + data.reply + '</div></div>';
     chatArea.scrollTop = chatArea.scrollHeight;
 
-    var historyList = document.getElementById('history-list');
-    if (historyList) {
+    var hl = document.getElementById('history-list');
+    if (hl) {
       var item = document.createElement('div');
-      item.className = 'chat-history-item';
-      item.textContent = message.substring(0, 35) + '...';
-      historyList.prepend(item);
+      item.className = 'hist-item';
+      item.textContent = message.substring(0, 32) + '...';
+      hl.prepend(item);
     }
 
   } catch (error) {
-    var thinking = document.getElementById('thinking-row');
-    if (thinking) thinking.remove();
-    chatArea.innerHTML += `
-      <div class="message-row bot">
-        <div class="bubble bot">❌ Something went wrong. Try again!</div>
-      </div>`;
+    var t = document.getElementById('thinking-row');
+    if (t) t.remove();
+    chatArea.innerHTML += '<div class="msg-row bot"><div class="bubble bot">Something went wrong. Try again!</div></div>';
   }
 }
 
@@ -70,5 +51,5 @@ function handleKey(event) {
 
 function autoResize(el) {
   el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+  el.style.height = Math.min(el.scrollHeight, 150) + 'px';
 }
