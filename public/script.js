@@ -1,7 +1,10 @@
 async function sendMessage() {
   var input = document.getElementById('chatInput');
   var chatArea = document.getElementById('chatArea');
-  if (!input || !chatArea) return;
+  
+  if (!input) { alert('Input not found!'); return; }
+  if (!chatArea) { alert('ChatArea not found!'); return; }
+  
   var message = input.value.trim();
   if (!message) return;
 
@@ -20,13 +23,10 @@ async function sendMessage() {
       body: JSON.stringify({ message: message })
     });
     var data = await response.json();
-
     var t = document.getElementById('thinking-row');
     if (t) t.remove();
-
     chatArea.innerHTML += '<div class="msg-row bot"><div class="bubble bot">' + data.reply + '</div></div>';
     chatArea.scrollTop = chatArea.scrollHeight;
-
     var hl = document.getElementById('history-list');
     if (hl) {
       var item = document.createElement('div');
@@ -34,18 +34,24 @@ async function sendMessage() {
       item.textContent = message.substring(0, 32) + '...';
       hl.prepend(item);
     }
-
   } catch (error) {
     var t = document.getElementById('thinking-row');
     if (t) t.remove();
-    chatArea.innerHTML += '<div class="msg-row bot"><div class="bubble bot">Something went wrong. Try again!</div></div>';
+    chatArea.innerHTML += '<div class="msg-row bot"><div class="bubble bot">Error: ' + error.message + '</div></div>';
   }
 }
 
-function handleKey(event) {
-  if (event.key === 'Enter' && !event.shiftKey) {
-    event.preventDefault();
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
     sendMessage();
+  }
+}
+
+function handleLandingKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    startFromLanding();
   }
 }
 
