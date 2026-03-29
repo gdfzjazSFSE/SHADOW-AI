@@ -14,7 +14,6 @@ app.get('/', (req, res) => {
 
 app.post('/chat', async (req, res) => {
   const { message, model } = req.body;
-
   const isAether = model === 'aether';
 
   const apiURL = isAether
