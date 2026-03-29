@@ -1,260 +1,529 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JARVIS 3.0 — Powered by SHADOW AI</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500&family=EB+Garamond:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Inter',sans-serif;background:#000;overflow:hidden;height:100vh}
-    .topbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:#00ff88;color:#000;text-align:center;font-size:13px;font-weight:700;padding:8px;letter-spacing:1px}
-    nav{position:fixed;top:36px;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 40px}
-    .nav-logo{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;color:#fff;letter-spacing:2px}
-    .nav-logo span{color:#00ff88}
-    .nav-sub{font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:2px;margin-top:2px;font-family:'Inter',sans-serif}
-    .nav-links{display:flex;gap:0;align-items:center;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:6px 8px}
-    .nav-links a{color:rgba(255,255,255,0.6);text-decoration:none;font-size:13px;padding:6px 16px;border-radius:100px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:4px}
-    .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.08)}
-    .nav-links a span{color:#00ff88;font-size:11px}
-    .nav-right{display:flex;align-items:center;gap:12px}
-    .btn-login{color:rgba(255,255,255,0.7);font-size:14px;cursor:pointer;background:none;border:none;font-family:'Inter',sans-serif}
-    .btn-start{background:#00ff88;color:#000;border:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px;transition:all 0.2s}
-    .btn-start:hover{background:#00e87a;transform:translateY(-1px)}
-    #landing{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
-    #bgCanvas{position:absolute;inset:0;width:100%;height:100%}
-    #brainCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:2}
-    .hero{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px;margin-top:60px}
-    .badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);padding:6px 20px;border-radius:100px;color:rgba(0,255,136,0.8);font-size:12px;margin-bottom:24px;letter-spacing:2px;text-transform:uppercase}
-    h1{font-family:'Orbitron',monospace;font-size:clamp(32px,5vw,72px);font-weight:900;color:#fff;line-height:1.05;margin-bottom:8px;letter-spacing:-1px}
-    h1 span{color:#00ff88;text-shadow:0 0 30px rgba(0,255,136,0.5)}
-    .powered-by{font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:32px;letter-spacing:3px;text-transform:uppercase}
-    .powered-by span{color:#00ff88;font-weight:600}
-    .subtitle{font-size:15px;color:rgba(255,255,255,0.45);margin-bottom:40px;letter-spacing:1px;max-width:500px}
-    .input-container{width:100%;max-width:660px;background:rgba(0,0,0,0.6);border:1px solid rgba(0,255,136,0.2);border-radius:16px;padding:20px 20px 14px;backdrop-filter:blur(20px);transition:border 0.3s}
-    .input-container:focus-within{border-color:rgba(0,255,136,0.5);box-shadow:0 0 30px rgba(0,255,136,0.08)}
-    .input-container textarea{width:100%;background:transparent;border:none;outline:none;color:#fff;font-size:15px;font-family:'Inter',sans-serif;resize:none;min-height:56px;max-height:120px;line-height:1.6;caret-color:#00ff88}
-    .input-container textarea::placeholder{color:rgba(255,255,255,0.2)}
-    .input-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
-    .input-tags{display:flex;gap:8px}
-    .tag{background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.15);padding:4px 12px;border-radius:6px;color:rgba(0,255,136,0.6);font-size:11px;letter-spacing:1px;cursor:pointer;transition:all 0.2s}
-    .tag:hover{background:rgba(0,255,136,0.12);color:#00ff88}
-    .send-btn{width:38px;height:38px;background:linear-gradient(135deg,#00ff88,#00cc66);border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
-    .send-btn:hover{transform:scale(1.08);box-shadow:0 0 20px rgba(0,255,136,0.4)}
-    .send-btn svg{width:16px;height:16px}
-    #chat-page{display:none;position:fixed;inset:0;z-index:200;background:#0a0a0a}
-    .chat-layout{display:flex;height:100vh}
-    .sidebar{width:240px;background:#0d0d0d;border-right:1px solid #1a1a1a;display:flex;flex-direction:column;padding:16px 12px;flex-shrink:0}
-    .sidebar-logo{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:#fff;padding:8px 12px;margin-bottom:2px;letter-spacing:1px}
-    .sidebar-logo span{color:#00ff88}
-    .sidebar-powered{font-size:10px;color:#333;padding:0 12px;margin-bottom:12px;letter-spacing:1px}
-    .sidebar-powered span{color:#00ff88}
-    .new-chat-btn{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;font-size:13px;font-family:'Inter',sans-serif;font-weight:500;cursor:pointer;border:1px solid #222;background:#111;color:#fff;margin-bottom:16px;transition:all 0.2s}
-    .new-chat-btn:hover{background:#1a1a1a;border-color:#00ff88}
-    .sidebar-section{font-size:10px;font-weight:600;color:#333;letter-spacing:1px;padding:0 12px;margin-bottom:6px;text-transform:uppercase}
-    .chat-history-item{padding:9px 14px;border-radius:8px;font-size:13px;color:#555;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:all 0.15s}
-    .chat-history-item:hover{background:#1a1a1a;color:#fff}
-    .sidebar-bottom{margin-top:auto;border-top:1px solid #1a1a1a;padding-top:12px}
-    .user-info{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer}
-    .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#00ff88,#00cc66);color:#000;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
-    .user-name{font-size:13px;font-weight:500;color:#fff;font-family:'Orbitron',monospace;letter-spacing:1px}
-    .user-email{font-size:10px;color:#333;letter-spacing:1px}
-    .chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-    .chat-topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:1px solid #1a1a1a;background:#0a0a0a}
-    .model-label{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:#00ff88;letter-spacing:1px}
-    .model-sub{font-size:11px;color:#333;letter-spacing:1px}
-    .chat-area{flex:1;overflow-y:auto;padding:32px 0;background:#0a0a0a}
-    .chat-area::-webkit-scrollbar{width:4px}
-    .chat-area::-webkit-scrollbar-thumb{background:#222;border-radius:4px}
-    .message-row{max-width:720px;margin:0 auto;padding:8px 24px;display:flex;flex-direction:column}
-    .message-row.user{align-items:flex-end}
-    .message-row.bot{align-items:flex-start}
-    .bubble{max-width:80%;padding:14px 18px;border-radius:18px;font-size:15px;line-height:1.7;word-wrap:break-word}
-    .bubble.user{background:#00ff88;color:#000;border-bottom-right-radius:4px;font-weight:500}
-    .bubble.bot{background:#111;color:#e0e0e0;border-bottom-left-radius:4px;border:1px solid #1e1e1e;font-family:'EB Garamond',serif;font-size:16px}
-    .thinking{display:flex;align-items:center;gap:6px;padding:14px 18px;background:#111;border:1px solid #1e1e1e;border-radius:18px;border-bottom-left-radius:4px;width:fit-content}
-    .dot{width:6px;height:6px;background:#333;border-radius:50%;animation:bounce 1.2s infinite}
-    .dot:nth-child(2){animation-delay:0.2s}
-    .dot:nth-child(3){animation-delay:0.4s}
-    @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px);background:#00ff88}}
-    .chat-input-wrapper{padding:16px 24px 24px;background:#0a0a0a;border-top:1px solid #1a1a1a}
-    .chat-input-box{max-width:720px;margin:0 auto;background:#111;border:1px solid #222;border-radius:16px;display:flex;align-items:flex-end;padding:12px 16px;gap:10px;transition:border 0.2s}
-    .chat-input-box:focus-within{border-color:#00ff88;box-shadow:0 0 20px rgba(0,255,136,0.08)}
-    .chat-input-box textarea{flex:1;border:none;outline:none;font-size:15px;font-family:'Inter',sans-serif;resize:none;max-height:160px;min-height:24px;line-height:1.6;background:transparent;color:#fff;caret-color:#00ff88}
-    .chat-input-box textarea::placeholder{color:#333}
-    .chat-send-btn{width:36px;height:36px;background:linear-gradient(135deg,#00ff88,#00cc66);border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
-    .chat-send-btn:hover{transform:scale(1.05);box-shadow:0 0 15px rgba(0,255,136,0.4)}
-    .chat-send-btn svg{width:16px;height:16px;fill:#000}
-    .input-hint{text-align:center;font-size:11px;color:#222;margin-top:8px;letter-spacing:2px}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS 3.0 — Shadow AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#080810;
+  --surface:#0f0f1a;
+  --surface2:#14141f;
+  --border:#1c1c2e;
+  --border2:#252538;
+  --accent:#00ff88;
+  --aether:#00aaff;
+  --text:#e8e8f0;
+  --text2:#8888aa;
+  --text3:#444460;
+  --font-head:'Syne',sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --font-body:'Lora',serif;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font-head)}
+
+/* ── CANVAS ── */
+#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── LANDING ── */
+#landing{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:10;transition:opacity .45s,transform .45s}
+#landing.hidden{opacity:0;pointer-events:none;transform:translateY(-18px)}
+.land-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 24px}
+.land-eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:22px;opacity:.75}
+.land-title{font-family:var(--font-head);font-size:clamp(52px,9vw,100px);font-weight:800;line-height:1;letter-spacing:-2.5px;color:#fff;margin-bottom:6px}
+.land-title .v{color:var(--accent)}
+.land-sub{font-family:var(--font-mono);font-size:11px;letter-spacing:3px;color:var(--text3);text-transform:uppercase;margin-bottom:40px}
+.dual-badge{display:flex;align-items:center;gap:10px;margin-bottom:44px;background:rgba(255,255,255,.025);border:1px solid var(--border2);border-radius:100px;padding:8px 22px}
+.ai-pill{font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:2px;padding:5px 16px;border-radius:100px}
+.ai-pill.j{background:rgba(0,255,136,.08);color:var(--accent);border:1px solid rgba(0,255,136,.18)}
+.ai-pill.a{background:rgba(0,170,255,.08);color:var(--aether);border:1px solid rgba(0,170,255,.18)}
+.dual-badge .sep{color:var(--text3);font-size:13px}
+.land-input-wrap{width:100%;max-width:620px;background:rgba(15,15,26,.85);border:1px solid var(--border2);border-radius:20px;padding:20px 20px 14px;backdrop-filter:blur(24px);transition:border-color .3s,box-shadow .3s}
+.land-input-wrap:focus-within{border-color:rgba(0,255,136,.3);box-shadow:0 0 36px rgba(0,255,136,.05)}
+.land-input-wrap textarea{width:100%;background:transparent;border:none;outline:none;color:var(--text);font-family:var(--font-head);font-size:15px;resize:none;min-height:52px;max-height:120px;line-height:1.65;caret-color:var(--accent)}
+.land-input-wrap textarea::placeholder{color:var(--text3)}
+.land-foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+.land-tags{display:flex;gap:7px}
+.land-tag{font-family:var(--font-mono);font-size:10px;letter-spacing:1.5px;padding:4px 11px;border:1px solid var(--border2);border-radius:6px;color:var(--text3);cursor:pointer;transition:.2s}
+.land-tag:hover{border-color:var(--accent);color:var(--accent)}
+.land-send{width:40px;height:40px;background:var(--accent);border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0}
+.land-send:hover{transform:scale(1.07);box-shadow:0 0 22px rgba(0,255,136,.4)}
+
+/* ── CHAT PAGE ── */
+#chat-page{position:fixed;inset:0;display:flex;opacity:0;pointer-events:none;transition:opacity .45s}
+#chat-page.visible{opacity:1;pointer-events:all}
+
+/* Sidebar */
+.sidebar{width:256px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.sb-top{padding:20px 16px 16px;border-bottom:1px solid var(--border)}
+.sb-logo{font-family:var(--font-head);font-size:16px;font-weight:800;letter-spacing:-.5px;color:#fff}
+.sb-logo span{color:var(--accent)}
+.sb-powered{font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--text3);margin-top:3px}
+.ai-switcher{display:flex;gap:5px;margin-top:14px;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:4px}
+.sw-btn{flex:1;padding:7px 0;border:none;border-radius:9px;font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:1.5px;cursor:pointer;transition:.2s;background:transparent;color:var(--text3)}
+.sw-btn.j-on{background:rgba(0,255,136,.1);color:var(--accent);border:1px solid rgba(0,255,136,.18)}
+.sw-btn.a-on{background:rgba(0,170,255,.1);color:var(--aether);border:1px solid rgba(0,170,255,.18)}
+.sb-new{display:flex;align-items:center;gap:8px;margin:14px 16px 0;padding:10px 14px;border-radius:10px;border:1px solid var(--border2);background:transparent;color:var(--text2);font-family:var(--font-head);font-size:13px;font-weight:600;cursor:pointer;transition:.2s;width:calc(100% - 32px)}
+.sb-new:hover{background:var(--surface2);color:#fff;border-color:var(--accent)}
+.sb-sec{font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;padding:18px 20px 6px}
+.sb-hist{flex:1;overflow-y:auto;padding:0 8px}
+.sb-hist::-webkit-scrollbar{width:3px}
+.sb-hist::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.hist-item{padding:9px 12px;border-radius:8px;font-size:12px;font-family:var(--font-head);color:var(--text3);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:.15s}
+.hist-item:hover{background:var(--surface2);color:var(--text)}
+.sb-bot{padding:14px 16px;border-top:1px solid var(--border)}
+.sb-user{display:flex;align-items:center;gap:10px}
+.sb-av{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#00cc66);color:#000;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:13px;font-weight:800;flex-shrink:0}
+.sb-uname{font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--text)}
+.sb-usub{font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--text3);margin-top:2px}
+
+/* Main */
+.chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.chat-topbar{display:flex;align-items:center;padding:16px 28px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;gap:12px}
+.ct-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);animation:pdot 2s ease-in-out infinite;flex-shrink:0}
+.ct-dot.a{background:var(--aether);box-shadow:0 0 10px var(--aether)}
+@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.8)}}
+.ct-name{font-family:var(--font-head);font-size:14px;font-weight:700;letter-spacing:.5px}
+.ct-model{font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;color:var(--text3);margin-top:2px}
+
+/* Messages */
+.chat-area{flex:1;overflow-y:auto;padding:28px 0;scroll-behavior:smooth}
+.chat-area::-webkit-scrollbar{width:4px}
+.chat-area::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+.msg-row{max-width:760px;margin:0 auto;padding:5px 28px;display:flex;flex-direction:column}
+.msg-row.user{align-items:flex-end}
+.msg-row.bot{align-items:flex-start}
+.bubble{max-width:78%;padding:12px 18px;border-radius:18px;font-size:15px;line-height:1.78;word-wrap:break-word}
+.bubble.user{background:rgba(0,255,136,.08);color:var(--text);border:1px solid rgba(0,255,136,.15);border-bottom-right-radius:4px;font-family:var(--font-head);font-weight:400}
+.bubble.bot{background:var(--surface);color:var(--text);border:1px solid var(--border2);border-bottom-left-radius:4px;font-family:var(--font-body);font-size:15.5px}
+.bubble.bot.ae{border-color:rgba(0,170,255,.18)}
+.bubble.bot.streaming::after{content:'▋';display:inline-block;color:var(--accent);animation:blink .65s step-end infinite;margin-left:2px;font-size:13px;vertical-align:middle}
+.bubble.bot.ae.streaming::after{color:var(--aether)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.bot-label{font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--text3);margin-bottom:5px;padding-left:2px}
+.thinking{display:flex;align-items:center;gap:5px;padding:12px 18px;background:var(--surface);border:1px solid var(--border2);border-radius:18px;border-bottom-left-radius:4px}
+.dot{width:5px;height:5px;background:var(--text3);border-radius:50%;animation:bo 1.2s ease-in-out infinite}
+.dot:nth-child(2){animation-delay:.2s}
+.dot:nth-child(3){animation-delay:.4s}
+@keyframes bo{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px);background:var(--accent)}}
+.dot.ae{animation-name:boa}
+@keyframes boa{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px);background:var(--aether)}}
+
+/* File chips */
+.file-chips{display:flex;flex-wrap:wrap;gap:6px;max-width:760px;margin:0 auto;padding:0 28px 6px}
+.fc{display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:5px 10px;font-family:var(--font-mono);font-size:11px;color:var(--text2)}
+.fc-rm{background:none;border:none;color:var(--text3);cursor:pointer;font-size:15px;line-height:1;padding:0;margin-left:2px;transition:.2s}
+.fc-rm:hover{color:#ff4455}
+
+/* Input area */
+.chat-input-wrap{padding:14px 28px 20px;background:var(--surface);border-top:1px solid var(--border);flex-shrink:0}
+.input-box{max-width:760px;margin:0 auto;background:var(--bg);border:1px solid var(--border2);border-radius:18px;overflow:hidden;transition:border-color .25s,box-shadow .25s}
+.input-box:focus-within{border-color:rgba(0,255,136,.28);box-shadow:0 0 28px rgba(0,255,136,.05)}
+.input-box.ae:focus-within{border-color:rgba(0,170,255,.28);box-shadow:0 0 28px rgba(0,170,255,.05)}
+.input-top{display:flex;align-items:flex-end;padding:11px 13px;gap:9px}
+.plus-btn{width:34px;height:34px;background:transparent;border:1px solid var(--border2);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0;color:var(--text3)}
+.plus-btn:hover{background:var(--surface2);border-color:var(--accent);color:var(--accent)}
+#chatInput{flex:1;border:none;outline:none;background:transparent;font-family:var(--font-head);font-size:14px;font-weight:400;color:var(--text);resize:none;max-height:150px;min-height:22px;line-height:1.65;caret-color:var(--accent)}
+#chatInput::placeholder{color:var(--text3)}
+.send-btn{width:34px;height:34px;background:var(--accent);border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0}
+.send-btn:hover{transform:scale(1.06);box-shadow:0 0 16px rgba(0,255,136,.4)}
+.send-btn:disabled{opacity:.3;cursor:not-allowed;transform:none;box-shadow:none}
+.send-btn.ae{background:var(--aether)}
+.send-btn.ae:hover{box-shadow:0 0 16px rgba(0,170,255,.4)}
+.send-btn svg{width:15px;height:15px;fill:#000}
+.input-bar-bot{display:flex;align-items:center;justify-content:space-between;padding:0 13px 9px}
+.ib-tags{display:flex;gap:6px}
+.ib-tag{font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;padding:3px 9px;border:1px solid var(--border2);border-radius:5px;color:var(--text3)}
+.ib-hint{font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--text3)}
+#fileInput{display:none}
+
+/* ── MODEL SELECTOR ── */
+.model-selector-wrap{position:relative;display:inline-flex;justify-content:center;margin-bottom:32px}
+.model-btn{display:flex;align-items:center;gap:8px;background:rgba(15,15,26,.7);border:1px solid var(--border2);border-radius:12px;padding:10px 16px;cursor:pointer;transition:.2s;backdrop-filter:blur(12px);font-family:var(--font-mono)}
+.model-btn:hover{border-color:rgba(0,255,136,.25);background:rgba(20,20,30,.9)}
+.model-btn-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);flex-shrink:0;transition:.3s}
+.model-btn-dot.ae{background:var(--aether);box-shadow:0 0 8px var(--aether)}
+.model-btn-name{font-size:13px;font-weight:500;letter-spacing:.5px;color:var(--text)}
+.model-btn-arrow{font-size:10px;color:var(--text3);margin-left:2px;transition:transform .2s}
+.model-btn-arrow.open{transform:rotate(180deg)}
+
+/* Dropdown panel */
+.model-dropdown{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%) scale(.97) translateY(-6px);width:280px;background:#12121e;border:1px solid var(--border2);border-radius:16px;padding:8px;z-index:100;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.model-dropdown.open{opacity:1;pointer-events:all;transform:translateX(-50%) scale(1) translateY(0)}
+
+.model-option{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:10px;cursor:pointer;transition:.15s;position:relative}
+.model-option:hover{background:rgba(255,255,255,.04)}
+.model-option.selected{background:rgba(0,255,136,.05)}
+.model-option.selected.ae-sel{background:rgba(0,170,255,.05)}
+.mo-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 7px var(--accent);flex-shrink:0;margin-top:5px}
+.mo-dot.ae{background:var(--aether);box-shadow:0 0 7px var(--aether)}
+.mo-info{flex:1}
+.mo-name{font-family:var(--font-head);font-size:14px;font-weight:600;color:var(--text);letter-spacing:-.2px}
+.mo-desc{font-family:var(--font-mono);font-size:10px;letter-spacing:.5px;color:var(--text3);margin-top:3px}
+.mo-check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;transition:.2s}
+.mo-check.checked{background:var(--accent);border-color:var(--accent)}
+.mo-check.checked svg{display:block}
+.mo-check.checked.ae-chk{background:var(--aether);border-color:var(--aether)}
+.mo-check svg{display:none;width:10px;height:10px}
+
+/* Extended thinking toggle */
+.mo-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 4px;margin-top:2px}
+.mo-toggle-label{font-family:var(--font-mono);font-size:10px;letter-spacing:1px;color:var(--text3)}
+.mo-toggle-sub{font-family:var(--font-mono);font-size:9px;letter-spacing:.5px;color:var(--text3);opacity:.6;margin-top:2px}
+.toggle-switch{width:36px;height:20px;background:var(--border2);border-radius:100px;position:relative;cursor:pointer;transition:.25s;flex-shrink:0}
+.toggle-switch.on{background:var(--accent)}
+.toggle-switch::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:.25s;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.toggle-switch.on::after{left:19px}
+
+.mo-divider{height:1px;background:var(--border);margin:8px 6px}
+.mo-more{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:10px;cursor:pointer;transition:.15s}
+.mo-more:hover{background:rgba(255,255,255,.04)}
+.mo-more-label{font-family:var(--font-mono);font-size:11px;letter-spacing:1px;color:var(--text3)}
+.mo-more-arrow{color:var(--text3);font-size:12px}
+</style>
 </head>
 <body>
 
+<canvas id="bgCanvas"></canvas>
+
+<!-- LANDING -->
 <div id="landing">
-  <canvas id="bgCanvas"></canvas>
-  <canvas id="brainCanvas"></canvas>
-
-  <div class="topbar">🚀 JARVIS 3.0 — Powered by SHADOW AI. Now Live!</div>
-
-  <nav>
-    <div>
-      <div class="nav-logo">JARVIS <span>3.0</span></div>
-      <div class="nav-sub">POWERED BY SHADOW AI</div>
-    </div>
-    <div class="nav-links">
-      <a><span>0.1 /</span> Home</a>
-      <a><span>0.2 /</span> Features</a>
-      <a><span>0.3 /</span> Pricing</a>
-      <a><span>0.4 /</span> About</a>
-    </div>
-    <div class="nav-right">
-      <button class="btn-login" onclick="showChat()">Login</button>
-      <button class="btn-start" onclick="showChat()">Get Started →</button>
-    </div>
-  </nav>
-
-  <div class="hero">
-    <div class="badge">⚡ Introducing JARVIS 3.0</div>
-    <h1>Powered Beyond<br><span>Expectations.</span></h1>
-    <div class="powered-by">by <span>SHADOW AI</span></div>
-    <p class="subtitle">The AI that thinks before you ask. Fast. Smart. Unstoppable.</p>
-    <div class="input-container">
-      <textarea id="landingInput" placeholder="Ask JARVIS 3.0 anything..." rows="2" onkeydown="handleLandingKey(event)"></textarea>
-      <div class="input-bottom">
-        <div class="input-tags">
-          <div class="tag">⚡ INSTANT</div>
-          <div class="tag">🧠 INTELLIGENT</div>
-          <div class="tag">🔥 POWERFUL</div>
+  <div class="land-inner">
+    <div class="land-eyebrow">Shadow AI — Next Generation</div>
+    <div class="land-title">JARVIS <span class="v">3.0</span></div>
+    <div class="land-sub">Powered by Shadow AI</div>
+    <!-- Model Selector -->
+    <div class="model-selector-wrap">
+      <button class="model-btn" id="modelBtn" onclick="toggleDropdown()">
+        <div class="model-btn-dot" id="modelBtnDot"></div>
+        <span class="model-btn-name" id="modelBtnName">JARVIS 3.0</span>
+        <span class="model-btn-arrow" id="modelArrow">&#9660;</span>
+      </button>
+      <div class="model-dropdown" id="modelDropdown">
+        <div class="model-option selected" id="optJarvis" onclick="selectModel('jarvis')">
+          <div class="mo-dot"></div>
+          <div class="mo-info">
+            <div class="mo-name">JARVIS 3.0</div>
+            <div class="mo-desc">Most efficient for everyday tasks</div>
+          </div>
+          <div class="mo-check checked" id="chkJarvis">
+            <svg viewBox="0 0 10 10" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg>
+          </div>
         </div>
-        <button class="send-btn" onclick="startFromLanding()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+        <div class="mo-toggle-row">
+          <div>
+            <div class="mo-toggle-label">Extended thinking</div>
+            <div class="mo-toggle-sub">Think longer for complex tasks</div>
+          </div>
+          <div class="toggle-switch" id="extThinkToggle" onclick="toggleExtThink()"></div>
+        </div>
+        <div class="mo-divider"></div>
+        <div class="model-option" id="optAether" onclick="selectModel('aether')">
+          <div class="mo-dot ae"></div>
+          <div class="mo-info">
+            <div class="mo-name">AETHER AI</div>
+            <div class="mo-desc">Advanced reasoning and deep analysis</div>
+          </div>
+          <div class="mo-check" id="chkAether">
+            <svg viewBox="0 0 10 10" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg>
+          </div>
+        </div>
+        <div class="mo-divider"></div>
+        <div class="mo-more" onclick="alert('More models coming soon!')">
+          <span class="mo-more-label">More models</span>
+          <span class="mo-more-arrow">&#8250;</span>
+        </div>
+      </div>
+    </div>
+    <div class="land-input-wrap">
+      <textarea id="landingInput" placeholder="Ask anything..." rows="2" onkeydown="handleLandingKey(event)"></textarea>
+      <div class="land-foot">
+        <div class="land-tags">
+          <span class="land-tag">FAST</span>
+          <span class="land-tag">SMART</span>
+          <span class="land-tag">FILES</span>
+        </div>
+        <button class="land-send" onclick="startFromLanding()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
         </button>
       </div>
     </div>
   </div>
 </div>
 
+<!-- CHAT PAGE -->
 <div id="chat-page">
-  <div class="chat-layout">
-    <div class="sidebar">
-      <div class="sidebar-logo">JARVIS <span>3.0</span></div>
-      <div class="sidebar-powered">POWERED BY <span>SHADOW AI</span></div>
-      <button class="new-chat-btn" onclick="newChat()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        New chat
-      </button>
-      <div class="sidebar-section">Recent</div>
-      <div id="history-list"></div>
-      <div class="sidebar-bottom">
-        <div class="user-info">
-          <div class="avatar">J</div>
-          <div>
-            <div class="user-name">JARVIS 3.0</div>
-            <div class="user-email">BY SHADOW AI</div>
-          </div>
+  <div class="sidebar">
+    <div class="sb-top">
+      <div class="sb-logo">JARVIS <span>3.0</span></div>
+      <div class="sb-powered">SHADOW AI SYSTEM</div>
+      <div class="ai-switcher">
+        <button class="sw-btn j-on" id="btnJ" onclick="switchAI('jarvis')">JARVIS</button>
+        <button class="sw-btn" id="btnA" onclick="switchAI('aether')">AETHER</button>
+      </div>
+    </div>
+    <button class="sb-new" onclick="newChat()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      New Chat
+    </button>
+    <div class="sb-sec">Recent</div>
+    <div class="sb-hist" id="historyList"></div>
+    <div class="sb-bot">
+      <div class="sb-user">
+        <div class="sb-av">J</div>
+        <div>
+          <div class="sb-uname">Shadow AI</div>
+          <div class="sb-usub">DUAL AI SYSTEM</div>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="chat-main">
-      <div class="chat-topbar">
-        <div>
-          <div class="model-label">⚡ JARVIS 3.0 ▾</div>
-          <div class="model-sub">POWERED BY SHADOW AI</div>
-        </div>
+  <div class="chat-main">
+    <div class="chat-topbar">
+      <div class="ct-dot" id="ctDot"></div>
+      <div>
+        <div class="ct-name" id="ctName">JARVIS 3.0</div>
+        <div class="ct-model" id="ctModel">LLAMA 3.3 · GROQ · SHADOW AI</div>
       </div>
-      <div class="chat-area" id="chatArea"></div>
-      <div class="chat-input-wrapper">
-        <div class="chat-input-box">
+    </div>
+    <div class="chat-area" id="chatArea"></div>
+    <div class="chat-input-wrap">
+      <div class="file-chips" id="fileChips"></div>
+      <div class="input-box" id="inputBox">
+        <div class="input-top">
+          <button class="plus-btn" onclick="document.getElementById('fileInput').click()" title="Attach file">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
           <textarea id="chatInput" placeholder="Message JARVIS 3.0..." rows="1" onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
-          <button class="chat-send-btn" onclick="sendMessage()">
+          <button class="send-btn" id="sendBtn" onclick="sendMessage()">
             <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
           </button>
         </div>
-        <div class="input-hint">JARVIS 3.0 — POWERED BY SHADOW AI</div>
+        <div class="input-bar-bot">
+          <div class="ib-tags">
+            <span class="ib-tag">PDF</span>
+            <span class="ib-tag">IMAGE</span>
+            <span class="ib-tag">DOCX</span>
+            <span class="ib-tag">TXT</span>
+          </div>
+          <span class="ib-hint">SHIFT+ENTER for newline</span>
+        </div>
       </div>
+      <input type="file" id="fileInput" multiple accept=".pdf,.png,.jpg,.jpeg,.gif,.webp,.txt,.docx,.doc,.csv,.json,.md" onchange="handleFiles(this.files)">
     </div>
   </div>
 </div>
 
-<script src="script.js"></script>
 <script>
-const bg=document.getElementById('bgCanvas');
-const bgCtx=bg.getContext('2d');
-bg.width=window.innerWidth;bg.height=window.innerHeight;
+// Canvas BG
+const cv=document.getElementById('bgCanvas');
+const ctx=cv.getContext('2d');
+function rsz(){cv.width=innerWidth;cv.height=innerHeight}rsz();
+window.addEventListener('resize',rsz);
 const pts=[];
-for(let i=0;i<100;i++)pts.push({x:Math.random()*bg.width,y:Math.random()*bg.height,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*1.5+.5});
-function drawBg(){
-  bgCtx.fillStyle='rgba(0,0,0,0.15)';bgCtx.fillRect(0,0,bg.width,bg.height);
+for(let i=0;i<90;i++)pts.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.2+.4});
+(function loop(){
+  ctx.fillStyle='rgba(8,8,16,0.18)';ctx.fillRect(0,0,cv.width,cv.height);
   pts.forEach(p=>{
     p.x+=p.vx;p.y+=p.vy;
-    if(p.x<0||p.x>bg.width)p.vx*=-1;
-    if(p.y<0||p.y>bg.height)p.vy*=-1;
-    bgCtx.beginPath();bgCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    bgCtx.fillStyle='rgba(0,255,136,0.5)';bgCtx.fill();
+    if(p.x<0||p.x>cv.width)p.vx*=-1;
+    if(p.y<0||p.y>cv.height)p.vy*=-1;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,255,136,0.5)';ctx.fill();
     pts.forEach(q=>{
       const d=Math.hypot(p.x-q.x,p.y-q.y);
-      if(d<130){bgCtx.beginPath();bgCtx.moveTo(p.x,p.y);bgCtx.lineTo(q.x,q.y);
-        bgCtx.strokeStyle=`rgba(0,255,136,${.05*(1-d/130)})`;bgCtx.lineWidth=.5;bgCtx.stroke()}
+      if(d<110){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);
+        ctx.strokeStyle=`rgba(0,255,136,${.04*(1-d/110)})`;ctx.lineWidth=.5;ctx.stroke()}
     });
-  });requestAnimationFrame(drawBg);
-}
-drawBg();
-
-const bc=document.getElementById('brainCanvas');
-const bCtx=bc.getContext('2d');
-bc.width=window.innerWidth;bc.height=window.innerHeight;
-let angle=0;
-const nodes=[];
-for(let i=0;i<120;i++){
-  const theta=Math.random()*Math.PI*2;
-  const phi=Math.acos(2*Math.random()-1);
-  const r=180+Math.random()*40;
-  nodes.push({ox:r*Math.sin(phi)*Math.cos(theta),oy:r*Math.sin(phi)*Math.sin(theta),oz:r*Math.cos(phi),pulse:Math.random()*Math.PI*2});
-}
-function drawBrain(){
-  bCtx.clearRect(0,0,bc.width,bc.height);
-  const cx=bc.width/2,cy=bc.height/2+30;
-  angle+=0.003;
-  const cos=Math.cos(angle),sin=Math.sin(angle);
-  const projected=nodes.map(n=>{
-    const x=n.ox*cos-n.oz*sin;
-    const z=n.ox*sin+n.oz*cos;
-    const scale=600/(600+z);
-    return{sx:cx+x*scale,sy:cy+n.oy*scale,z,scale,pulse:n.pulse};
   });
-  projected.forEach((p,i)=>{
-    projected.forEach((q,j)=>{
-      if(j<=i)return;
-      const d=Math.hypot(p.sx-q.sx,p.sy-q.sy);
-      if(d<80&&p.z>-100&&q.z>-100){
-        bCtx.beginPath();bCtx.moveTo(p.sx,p.sy);bCtx.lineTo(q.sx,q.sy);
-        bCtx.strokeStyle=`rgba(0,255,136,${0.12*(1-d/80)*(p.z+200)/400})`;bCtx.lineWidth=0.5;bCtx.stroke();
-      }
-    });
-    if(p.z>-50){
-      const bright=(Math.sin(Date.now()*0.002+p.pulse)+1)/2;
-      bCtx.beginPath();bCtx.arc(p.sx,p.sy,2*p.scale,0,Math.PI*2);
-      bCtx.fillStyle=`rgba(0,255,${100+Math.floor(bright*155)},${0.4+bright*0.6})`;bCtx.fill();
-    }
-  });
-  requestAnimationFrame(drawBrain);
-}
-drawBrain();
+  requestAnimationFrame(loop);
+})();
 
+// State
+let currentAI='jarvis',isSending=false,attachedFiles=[];
+const SYS_J='You are JARVIS 3.0, a powerful AI assistant by Shadow AI. Be concise, confident, and helpful. Respond in English.';
+const SYS_A='You are AETHER AI, an advanced intelligence system by Shadow AI. Be analytical, precise, and deeply insightful. Respond in English.';
+
+// AI Switch
+function switchAI(ai){
+  currentAI=ai;
+  const isA=ai==='aether';
+  document.getElementById('btnJ').className='sw-btn'+(isA?'':' j-on');
+  document.getElementById('btnA').className='sw-btn'+(isA?' a-on':'');
+  document.getElementById('ctDot').className='ct-dot'+(isA?' a':'');
+  document.getElementById('ctName').textContent=isA?'AETHER AI':'JARVIS 3.0';
+  document.getElementById('ctModel').textContent=isA?'LLAMA 3.3 · GROQ · AETHER CORE':'LLAMA 3.3 · GROQ · SHADOW AI';
+  document.getElementById('chatInput').placeholder='Message '+(isA?'AETHER AI':'JARVIS 3.0')+'...';
+  document.getElementById('sendBtn').className='send-btn'+(isA?' ae':'');
+  document.getElementById('inputBox').className='input-box'+(isA?' ae':'');
+}
+
+// Navigation
 function showChat(){
-  document.getElementById('landing').style.display='none';
-  document.getElementById('chat-page').style.display='block';
+  document.getElementById('landing').classList.add('hidden');
+  document.getElementById('chat-page').classList.add('visible');
 }
 function startFromLanding(){
-  var msg=document.getElementById('landingInput').value.trim();
+  const msg=document.getElementById('landingInput').value.trim();
   showChat();
-  if(msg){setTimeout(()=>{document.getElementById('chatInput').value=msg;sendMessage();},100)}
+  if(msg)setTimeout(()=>{document.getElementById('chatInput').value=msg;sendMessage();},150);
 }
 function handleLandingKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();startFromLanding()}}
+function newChat(){document.getElementById('chatArea').innerHTML='';attachedFiles=[];renderChips()}
+
+// Input
 function handleChatKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage()}}
-function newChat(){document.getElementById('chatArea').innerHTML=''}
-function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,160)+'px'}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,150)+'px'}
+
+// Files
+function handleFiles(files){
+  Array.from(files).forEach(f=>attachedFiles.push(f));
+  renderChips();
+  document.getElementById('fileInput').value='';
+}
+function renderChips(){
+  const fc=document.getElementById('fileChips');fc.innerHTML='';
+  attachedFiles.forEach((f,i)=>{
+    const icon=f.type.startsWith('image/')?'🖼️':f.name.endsWith('.pdf')?'📄':f.name.match(/\.docx?$/)?'📝':'📎';
+    const c=document.createElement('div');c.className='fc';
+    c.innerHTML=`${icon} <span>${f.name.length>22?f.name.slice(0,20)+'…':f.name}</span><button class="fc-rm" onclick="rmFile(${i})">×</button>`;
+    fc.appendChild(c);
+  });
+}
+function rmFile(i){attachedFiles.splice(i,1);renderChips()}
+
+async function readFile(f){
+  return new Promise(res=>{
+    const r=new FileReader();
+    r.onload=()=>res(r.result);
+    r.onerror=()=>res('[Could not read]');
+    f.type.startsWith('image/')?r.readAsDataURL(f):r.readAsText(f);
+  });
+}
+
+// Typewriter
+function typewrite(el,text,spd){
+  return new Promise(res=>{
+    el.classList.add('streaming');
+    let i=0;
+    function tick(){
+      if(i<text.length){
+        el.textContent+=text[i];i++;
+        const ch=text[i-1];
+        const d=ch==='.'||ch==='!'||ch==='?'?spd*5:ch===','||ch===';'?spd*2.5:spd;
+        setTimeout(tick,d);
+        document.getElementById('chatArea').scrollTop=document.getElementById('chatArea').scrollHeight;
+      }else{el.classList.remove('streaming');res()}
+    }
+    tick();
+  });
+}
+
+// Send
+async function sendMessage(){
+  if(isSending)return;
+  const input=document.getElementById('chatInput');
+  const area=document.getElementById('chatArea');
+  const btn=document.getElementById('sendBtn');
+  const msg=input.value.trim();
+  const hasF=attachedFiles.length>0;
+  if(!msg&&!hasF)return;
+
+  isSending=true;btn.disabled=true;
+  const isA=currentAI==='aether';
+
+  // User bubble
+  let disp=msg||(hasF?'[Attached files]':'');
+  if(msg&&hasF)disp+=' ['+attachedFiles.map(f=>f.name).join(', ')+']';
+  const uRow=document.createElement('div');uRow.className='msg-row user';
+  uRow.innerHTML=`<div class="bubble user">${esc(disp)}</div>`;
+  area.appendChild(uRow);
+  input.value='';input.style.height='auto';
+  area.scrollTop=area.scrollHeight;
+
+  // Read files
+  let fCtx='';
+  if(hasF){
+    for(const f of attachedFiles){
+      if(!f.type.startsWith('image/')){
+        const txt=await readFile(f);
+        fCtx+=`\n\n[File: ${f.name}]\n${txt.slice(0,4000)}`;
+      }else fCtx+=`\n[Image: ${f.name}]`;
+    }
+    attachedFiles=[];renderChips();
+  }
+
+  // Thinking
+  const tRow=document.createElement('div');tRow.className='msg-row bot';tRow.id='tr';
+  tRow.innerHTML=`<div class="bot-label">${isA?'AETHER AI':'JARVIS 3.0'}</div><div class="thinking"><div class="dot${isA?' ae':''}"></div><div class="dot${isA?' ae':''}"></div><div class="dot${isA?' ae':''}"></div></div>`;
+  area.appendChild(tRow);area.scrollTop=area.scrollHeight;
+
+  try{
+    const full=(msg+(fCtx?'\n\nFile contents:'+fCtx:'')).trim();
+    const r=await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:full,ai:currentAI,system:isA?SYS_A:SYS_J})});
+    const d=await r.json();
+    const tr=document.getElementById('tr');if(tr)tr.remove();
+
+    const bRow=document.createElement('div');bRow.className='msg-row bot';
+    const lbl=document.createElement('div');lbl.className='bot-label';lbl.textContent=isA?'AETHER AI':'JARVIS 3.0';
+    const bub=document.createElement('div');bub.className='bubble bot'+(isA?' ae':'');
+    bRow.appendChild(lbl);bRow.appendChild(bub);area.appendChild(bRow);
+    await typewrite(bub,d.reply||'Something went wrong.',14);
+
+    const hl=document.getElementById('historyList');
+    if(hl&&msg){const it=document.createElement('div');it.className='hist-item';it.textContent=msg.length>34?msg.slice(0,32)+'…':msg;hl.prepend(it)}
+  }catch(e){
+    const tr=document.getElementById('tr');if(tr)tr.remove();
+    const bRow=document.createElement('div');bRow.className='msg-row bot';
+    const lbl=document.createElement('div');lbl.className='bot-label';lbl.textContent=isA?'AETHER AI':'JARVIS 3.0';
+    const bub=document.createElement('div');bub.className='bubble bot'+(isA?' ae':'');
+    bRow.appendChild(lbl);bRow.appendChild(bub);area.appendChild(bRow);
+    await typewrite(bub,'Connection failed. Check your server.',14);
+  }
+
+  isSending=false;btn.disabled=false;input.focus();
+}
+
+function esc(t){const d=document.createElement('div');d.appendChild(document.createTextNode(t));return d.innerHTML}
+
+// Model Dropdown
+let dropOpen=false,extThink=false;
+function toggleDropdown(){
+  dropOpen=!dropOpen;
+  document.getElementById('modelDropdown').classList.toggle('open',dropOpen);
+  document.getElementById('modelArrow').classList.toggle('open',dropOpen);
+}
+document.addEventListener('click',function(e){
+  const wrap=document.querySelector('.model-selector-wrap');
+  if(wrap&&!wrap.contains(e.target)){
+    dropOpen=false;
+    document.getElementById('modelDropdown').classList.remove('open');
+    document.getElementById('modelArrow').classList.remove('open');
+  }
+});
+function selectModel(m){
+  const isA=m==='aether';
+  currentAI=m;
+  document.getElementById('optJarvis').className='model-option'+(isA?'':' selected');
+  document.getElementById('optAether').className='model-option'+(isA?' selected ae-sel':'');
+  document.getElementById('chkJarvis').className='mo-check'+(isA?'':' checked');
+  document.getElementById('chkAether').className='mo-check'+(isA?' checked ae-chk':'');
+  document.getElementById('modelBtnDot').className='model-btn-dot'+(isA?' ae':'');
+  document.getElementById('modelBtnName').textContent=isA?'AETHER AI':'JARVIS 3.0';
+  switchAI(m);
+  setTimeout(()=>{
+    dropOpen=false;
+    document.getElementById('modelDropdown').classList.remove('open');
+    document.getElementById('modelArrow').classList.remove('open');
+  },180);
+}
+function toggleExtThink(){
+  extThink=!extThink;
+  document.getElementById('extThinkToggle').classList.toggle('on',extThink);
+}
 </script>
 </body>
 </html>
