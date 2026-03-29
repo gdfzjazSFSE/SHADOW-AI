@@ -13,23 +13,43 @@ app.get('/', (req, res) => {
 });
 
 app.post('/chat', async (req, res) => {
-  const { message } = req.body;
+  const { message, model } = req.body;
+
+  const isAether = model === 'aether';
+
+  const apiURL = isAether
+    ? 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions'
+    : 'https://api.groq.com/openai/v1/chat/completions';
+
+  const apiKey = isAether
+    ? process.env.GEMINI_API_KEY
+    : process.env.GROQ_API_KEY;
+
+  const modelName = isAether
+    ? 'gemini-2.5-pro-preview-03-25'
+    : 'llama-3.3-70b-versatile';
+
+  const systemPrompt = isAether
+    ? 'You are ShadowAI powered by AETHER 5.2, the most powerful and intelligent AI assistant. Be detailed, thorough and highly capable.'
+    : 'You are ShadowAI powered by JARVIS 4.6, a smart and helpful AI assistant. Be concise, confident and helpful.';
+
   try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const response = await fetch(apiURL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + process.env.GROQ_API_KEY
+        'Authorization': 'Bearer ' + apiKey
       },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
+        model: modelName,
         messages: [
-          { role: 'system', content: 'You are ShadowAI, a smart and helpful AI assistant. Always respond in English. Be concise, confident and helpful.' },
+          { role: 'system', content: systemPrompt },
           { role: 'user', content: message }
         ],
         max_tokens: 1000
       })
     });
+
     const data = await response.json();
     if (data.choices && data.choices[0]) {
       res.json({ reply: data.choices[0].message.content });
